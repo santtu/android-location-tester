@@ -27,7 +27,7 @@
     <TextView
             android:layout_width="match_parent"
             android:layout_height="0dip"
-            android:text="Status text"
+            android:text="@string/output_sample_text"
             android:id="@+id/status"
             android:layout_gravity="center|bottom|left"
             android:typeface="monospace"
@@ -67,7 +67,7 @@
                 <RadioButton
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Passive provider"
+                        android:text="@string/passive_provider_text"
                         android:id="@+id/passiveButton"
                         android:layout_gravity="left|center_vertical"
                         android:checked="false"
@@ -76,7 +76,7 @@
                 <RadioButton
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Network provider"
+                        android:text="@string/network_provider_text"
                         android:id="@+id/networkButton"
                         android:layout_gravity="left|center_vertical"
                         android:checked="false"
@@ -85,7 +85,7 @@
                 <RadioButton
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="GPS provider"
+                        android:text="@string/gps_provider_text"
                         android:id="@+id/gpsButton"
                         android:layout_gravity="center|left"
                         android:checked="true"
@@ -103,12 +103,11 @@
             <ToggleButton
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Track"
                     android:id="@+id/toggleButton"
                     android:layout_gravity="center|top"
                     android:checked="false"
-                    android:textOff="Start"
-                    android:textOn="Stop"
+                    android:textOff="@string/toggle_off_text"
+                    android:textOn="@string/toggle_on_text"
                     android:onClick="onTrackingToggled"
                     android:paddingTop="10dp"
                     android:paddingBottom="30dp"/>
@@ -116,7 +115,7 @@
             <Button
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Get cached location"
+                    android:text="@string/cached_text"
                     android:id="@+id/cachedButton"
                     android:layout_gravity="center"
                     android:onClick="onGetCachedLocationClick"/>

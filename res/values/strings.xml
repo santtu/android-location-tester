@@ -20,4 +20,21 @@
 
 <resources>
     <string name="app_name">LocationTester</string>
+    <string name="passive_provider_text">Passive provider</string>
+    <string name="network_provider_text">Network provider</string>
+    <string name="gps_provider_text">GPS provider</string>
+    <string name="toggle_off_text">Start</string>
+    <string name="toggle_on_text">Stop</string>
+    <string name="cached_text">Get cached location</string>
+    <string name="status_cached_format">%1$s-%2$d: Cached: %3$s</string>
+    <string name="status_location_format">%1$s-%2$d: Location: %3$s</string>
+    <string name="status_changed_format">%1$s: Status: %2$d</string>
+    <string name="status_enabled_format">%1$s: Enabled</string>
+    <string name="status_disabled_format">%1$s: Disabled</string>
+    <string name="status_starting_format">%1$s-%2$d: Starting tracking</string>
+    <string name="status_stopping_format">%1$s-%2$d: Stopping tracking</string>
+    <string name="selected_passive_text">Selected passive provider</string>
+    <string name="selected_network_text">Selected network provider</string>
+    <string name="selected_gps_text">Selected GPS provider</string>
+    <string name="output_sample_text">Status text</string>
 </resources>

@@ -45,8 +45,7 @@ public class MainActivity extends Activity implements LocationListener {
                 l.getAltitude(), l.getAccuracy());
     }
 
-    private void add(String format, Object... args) {
-        String formatted = String.format(format, args);
+    private void add(String formatted) {
         text.setText(text.getText() + "\n" + formatted);
         Log.i("LocationTester", "DATA: " + formatted);
     }
@@ -98,17 +97,17 @@ public class MainActivity extends Activity implements LocationListener {
 
     public void onPassiveProviderSelected(View view) {
         provider = LocationManager.PASSIVE_PROVIDER;
-        add("Selected passive provider");
+        add(getString(R.string.selected_passive_text));
     }
 
     public void onNetworkProviderSelected(View view) {
         provider = LocationManager.NETWORK_PROVIDER;
-        add("Selected network provider");
+        add(getString(R.string.selected_network_text));
     }
 
     public void onGpsProviderSelected(View view) {
         provider = LocationManager.GPS_PROVIDER;
-        add("Selected GPS provider");
+        add(getString(R.string.selected_gps_text));
     }
 
     public void onTrackingToggled(View view) {
@@ -128,37 +127,37 @@ public class MainActivity extends Activity implements LocationListener {
 
         if (on) {
             set++;
-            add("%s-%d: Starting tracking", provider, set);
+            add(getString(R.string.status_starting_format, provider, set));
             lm.requestLocationUpdates(provider, 0, 0, this);
         } else {
             lm.removeUpdates(this);
-            add("%s-%d: Stopping tracking", provider, set);
+            add(getString(R.string.status_stopping_format, provider, set));
         }
     }
 
     public void onGetCachedLocationClick(View view) {
         set++;
-        add("%s-%d: Cached: %s", provider, set, formatLocation(lm.getLastKnownLocation(provider)));
+        add(getString(R.string.status_cached_format, provider, set, formatLocation(lm.getLastKnownLocation(provider))));
     }
 
 
     @Override
     public void onLocationChanged(Location location) {
-        add("%s-%d: Location: %s", provider, set, formatLocation(location));
+        add(getString(R.string.status_location_format, provider, set, formatLocation(location)));
     }
 
     @Override
     public void onStatusChanged(String provider, int status, Bundle bundle) {
-        add("%s: Status: %d", provider, status);
+        add(getString(R.string.status_changed_format, provider, status));
     }
 
     @Override
     public void onProviderEnabled(String provider) {
-        add("%s: Enabled", provider);
+        add(getString(R.string.status_enabled_format, provider));
     }
 
     @Override
     public void onProviderDisabled(String provider) {
-        add("%s: Disabled", provider);
+        add(getString(R.string.status_disabled_format, provider));
     }
 }
