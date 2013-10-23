@@ -24,9 +24,12 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.RadioGroup;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
@@ -35,6 +38,7 @@ public class MainActivity extends Activity implements LocationListener {
     private TextView text;
     private LocationManager lm;
     private int set = 0;
+    private ScrollView scroll;
 
     private Object formatLocation(Location l) {
         if (l == null)
@@ -46,8 +50,19 @@ public class MainActivity extends Activity implements LocationListener {
     }
 
     private void add(String formatted) {
-        text.setText(text.getText() + "\n" + formatted);
+        if (text.length() > 0)
+            text.append("\n");
+
+        text.append(formatted);
+
         Log.i("LocationTester", "DATA: " + formatted);
+
+        scroll.post(new Runnable() {
+            @Override
+            public void run() {
+                scroll.fullScroll(View.FOCUS_DOWN);
+            }
+        });
     }
 
     @Override
@@ -81,6 +96,8 @@ public class MainActivity extends Activity implements LocationListener {
 
         text = (TextView) findViewById(R.id.status);
         text.setText("");
+
+        scroll = (ScrollView) findViewById(R.id.scroll);
 
         lm = (LocationManager) getSystemService(LOCATION_SERVICE);
 

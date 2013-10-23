@@ -24,23 +24,23 @@
               android:layout_height="fill_parent"
         >
 
-    <TextView
+    <ScrollView
             android:layout_width="match_parent"
             android:layout_height="0dip"
-            android:text="@string/output_sample_text"
-            android:id="@+id/status"
-            android:layout_gravity="center|bottom|left"
-            android:typeface="monospace"
-            android:textColor="#000"
-            android:background="#ddd"
-            android:ellipsize="start"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="false"
-            android:layout_alignWithParentIfMissing="false"
-            android:layout_weight="1"
-            android:gravity="bottom"/>
+            android:id="@+id/scroll"
+            android:background="#fff"
+            android:fillViewport="true"
+            android:layout_weight="1">
+
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/output_sample_text"
+                android:id="@+id/status"
+                android:typeface="monospace"
+                android:textColor="#000"
+                android:background="#ddd"/>
+    </ScrollView>
 
     <LinearLayout
             android:orientation="horizontal"
