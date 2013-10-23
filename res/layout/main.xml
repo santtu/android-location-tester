@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2013 Santeri Paavolainen <santtu@iki.fi>
+  ~
+  ~ This file is part of LocationTester Android sample application.
+  ~
+  ~ LocationTester is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ LocationTester is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with LocationTester.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+        >
+
+    <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dip"
+            android:text="Status text"
+            android:id="@+id/status"
+            android:layout_gravity="center|bottom|left"
+            android:typeface="monospace"
+            android:textColor="#000"
+            android:background="#ddd"
+            android:ellipsize="start"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="false"
+            android:layout_alignWithParentIfMissing="false"
+            android:layout_weight="1"
+            android:gravity="bottom"/>
+
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:baselineAligned="true">
+
+        <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="6"
+                android:id="@+id/providerLayout">
+
+            <RadioGroup
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:id="@+id/providerGroup">
+
+                <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Passive provider"
+                        android:id="@+id/passiveButton"
+                        android:layout_gravity="left|center_vertical"
+                        android:checked="false"
+                        android:onClick="onPassiveProviderSelected"/>
+
+                <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Network provider"
+                        android:id="@+id/networkButton"
+                        android:layout_gravity="left|center_vertical"
+                        android:checked="false"
+                        android:onClick="onNetworkProviderSelected"/>
+
+                <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="GPS provider"
+                        android:id="@+id/gpsButton"
+                        android:layout_gravity="center|left"
+                        android:checked="true"
+                        android:onClick="onGpsProviderSelected"/>
+            </RadioGroup>
+
+        </LinearLayout>
+
+        <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="4">
+
+            <ToggleButton
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Track"
+                    android:id="@+id/toggleButton"
+                    android:layout_gravity="center|top"
+                    android:checked="false"
+                    android:textOff="Start"
+                    android:textOn="Stop"
+                    android:onClick="onTrackingToggled"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="30dp"/>
+
+            <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Get cached location"
+                    android:id="@+id/cachedButton"
+                    android:layout_gravity="center"
+                    android:onClick="onGetCachedLocationClick"/>
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>
+

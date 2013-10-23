@@ -4,3 +4,11 @@
 *.jar
 *.war
 *.ear
+
+local.properties
+out/
+.idea/
+proguard-project.txt
+*.iml
+gen/R.java.d
+bin
