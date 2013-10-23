@@ -24,6 +24,8 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -33,12 +35,16 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import java.io.Serializable;
+
 public class MainActivity extends Activity implements LocationListener {
     String provider = LocationManager.GPS_PROVIDER;
     private TextView text;
     private LocationManager lm;
     private int set = 0;
     private ScrollView scroll;
+    private ToggleButton toggle;
+    private boolean tracking;
 
     private Object formatLocation(Location l) {
         if (l == null)
@@ -77,7 +83,7 @@ public class MainActivity extends Activity implements LocationListener {
         Log.i("LocationTester", "onResume()");
         super.onResume();
 
-        if (((ToggleButton) findViewById(R.id.toggleButton)).isChecked())
+        if (tracking)
             lm.requestLocationUpdates(provider, 0, 0, this);
     }
 
@@ -88,16 +94,17 @@ public class MainActivity extends Activity implements LocationListener {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        Log.i("LocationTester", "onCreate()");
+    public void onCreate(Bundle bundle) {
+        Log.i("LocationTester", "onCreate(): bundle=" + bundle);
 
-        super.onCreate(savedInstanceState);
+        super.onCreate(bundle);
         setContentView(R.layout.main);
 
         text = (TextView) findViewById(R.id.status);
-        text.setText("");
-
         scroll = (ScrollView) findViewById(R.id.scroll);
+        toggle = (ToggleButton) findViewById(R.id.toggleButton);
+
+        text.setText("");
 
         lm = (LocationManager) getSystemService(LOCATION_SERVICE);
 
@@ -110,6 +117,46 @@ public class MainActivity extends Activity implements LocationListener {
 
         if (!lm.isProviderEnabled(LocationManager.GPS_PROVIDER))
             ((RadioGroup) findViewById(R.id.providerGroup)).removeView(findViewById(R.id.gpsButton));
+    }
+
+    private boolean isTracking() {
+        return tracking;
+    }
+
+    private static final String STATE_KEY = MainActivity.class.getCanonicalName() + ".state";
+
+    @Override
+    protected void onSaveInstanceState(Bundle bundle) {
+        super.onSaveInstanceState(bundle);
+
+        bundle.putBoolean("tracking", tracking);
+        bundle.putInt("set", set);
+        bundle.putString("text", text.getText().toString());
+        bundle.putString("provider", provider);
+        bundle.putIntArray("position", new int[] { scroll.getScrollX(), scroll.getScrollY()});
+
+        Log.i("LocationTester", "onSaveInstanceState: bundle=" + bundle);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle bundle) {
+        super.onRestoreInstanceState(bundle);
+
+        Log.i("LocationTester", "onRestoreInstanceState: bundle=" + bundle);
+
+        text.setText(bundle.getString("text"));
+        set = bundle.getInt("set", 0);
+        provider = bundle.getString("provider");
+        final int[] position = bundle.getIntArray("position");
+        if (position != null)
+            scroll.post(new Runnable() {
+                @Override
+                public void run() {
+                    scroll.scrollTo(position[0], position[1]);
+                }
+            });
+
+        setTracking(bundle.getBoolean("tracking", false));
     }
 
     public void onPassiveProviderSelected(View view) {
@@ -127,9 +174,8 @@ public class MainActivity extends Activity implements LocationListener {
         add(getString(R.string.selected_gps_text));
     }
 
-    public void onTrackingToggled(View view) {
-        boolean on = ((ToggleButton) view).isChecked();
-        Log.i("LocationTester", "onTrackingToggled: on=" + on);
+    public void setTracking(boolean on) {
+        tracking = on;
 
         if (findViewById(R.id.passiveButton) != null)
             findViewById(R.id.passiveButton).setEnabled(!on);
@@ -141,13 +187,19 @@ public class MainActivity extends Activity implements LocationListener {
             findViewById(R.id.gpsButton).setEnabled(!on);
 
         findViewById(R.id.cachedButton).setEnabled(!on);
+    }
+
+    public void onTrackingToggled(View view) {
+        boolean on = toggle.isChecked();
+
+        Log.i("LocationTester", "onTrackingToggled: on=" + on);
+
+        setTracking(on);
 
         if (on) {
             set++;
             add(getString(R.string.status_starting_format, provider, set));
-            lm.requestLocationUpdates(provider, 0, 0, this);
         } else {
-            lm.removeUpdates(this);
             add(getString(R.string.status_stopping_format, provider, set));
         }
     }

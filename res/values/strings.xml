@@ -19,22 +19,57 @@
   -->
 
 <resources>
+    <!-- Application name, the application is a test application for location functionality on Android phones - without a good translation better left untouched -->
     <string name="app_name">LocationTester</string>
+
+    <!-- Passive location provider name, http://developer.android.com/reference/android/location/LocationManager.html#PASSIVE_PROVIDER -->
     <string name="passive_provider_text">Passive provider</string>
+
+    <!-- Network (wifi) based location provider name, http://developer.android.com/reference/android/location/LocationManager.html#NETWORK_PROVIDER -->
     <string name="network_provider_text">Network provider</string>
+
+    <!-- GPS satellite based location provider name, http://developer.android.com/reference/android/location/LocationManager.html#GPS_PROVIDER -->
     <string name="gps_provider_text">GPS provider</string>
+
+    <!-- Shown when toggle button is off (no tracking active), e.g. action to start location tracking -->
     <string name="toggle_off_text">Start</string>
+
+    <!-- Shown when toggle button is on (tracking is active), e.g. action to stop location tracking -->
     <string name="toggle_on_text">Stop</string>
+
+    <!-- Shown on button to retrieve cached location information without starting active location tracking -->
     <string name="cached_text">Get cached location</string>
+
+    <!-- Text formatted for status display when showing a cached location, $1 is provider name, $2 is tracking set number and $3 is formatted location information -->
     <string name="status_cached_format">%1$s-%2$d: Cached: %3$s</string>
+
+    <!-- Text formatted for status display when showing a location update (tracking active), $1 is provider name, $2 is tracking set number and $3 is formatted location information -->
     <string name="status_location_format">%1$s-%2$d: Location: %3$s</string>
+
+    <!-- Text formatted for status display when provider status changes, $1 is provider name and $2 is the status number/code -->
     <string name="status_changed_format">%1$s: Status: %2$d</string>
+
+    <!-- Text shown when a provider is enabled, $1 is location provider name -->
     <string name="status_enabled_format">%1$s: Enabled</string>
+
+    <!-- Text shown when a provider is disabled, $1 is location provider name -->
     <string name="status_disabled_format">%1$s: Disabled</string>
+
+    <!-- Text shown when starting active tracking, $1 is provider name and $2 is tracking set number -->
     <string name="status_starting_format">%1$s-%2$d: Starting tracking</string>
+
+    <!-- Text shown when stopping location tracking, $1 is provider name and $2 is tracking set number -->
     <string name="status_stopping_format">%1$s-%2$d: Stopping tracking</string>
+
+    <!-- Text shown when user has selected passive location provider by pressing the provider button -->
     <string name="selected_passive_text">Selected passive provider</string>
+
+    <!-- Text shown when user has selected network location provider by pressing the provider button -->
     <string name="selected_network_text">Selected network provider</string>
+
+    <!-- Text shown when user has selected gps satellite location provider by pressing the provider button -->
     <string name="selected_gps_text">Selected GPS provider</string>
-    <string name="output_sample_text">Status text</string>
+
+    <!-- Dummy text used in IDE, never actually shown for real users -->
+    <string name="output_sample_text" translate="false">Status text</string>
 </resources>
