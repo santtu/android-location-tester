@@ -38,6 +38,7 @@ import android.widget.ToggleButton;
 import java.io.Serializable;
 
 public class MainActivity extends Activity implements LocationListener {
+    private static final String STATE_KEY = MainActivity.class.getCanonicalName() + ".state";
     String provider = LocationManager.GPS_PROVIDER;
     private TextView text;
     private LocationManager lm;
@@ -123,7 +124,25 @@ public class MainActivity extends Activity implements LocationListener {
         return tracking;
     }
 
-    private static final String STATE_KEY = MainActivity.class.getCanonicalName() + ".state";
+    public void setTracking(boolean on) {
+        tracking = on;
+
+        if (findViewById(R.id.passiveButton) != null)
+            findViewById(R.id.passiveButton).setEnabled(!on);
+
+        if (findViewById(R.id.networkButton) != null)
+            findViewById(R.id.networkButton).setEnabled(!on);
+
+        if (findViewById(R.id.gpsButton) != null)
+            findViewById(R.id.gpsButton).setEnabled(!on);
+
+        findViewById(R.id.cachedButton).setEnabled(!on);
+
+        if (on)
+            lm.requestLocationUpdates(provider, 0, 0, this);
+        else
+            lm.removeUpdates(this);
+    }
 
     @Override
     protected void onSaveInstanceState(Bundle bundle) {
@@ -174,26 +193,6 @@ public class MainActivity extends Activity implements LocationListener {
         add(getString(R.string.selected_gps_text));
     }
 
-    public void setTracking(boolean on) {
-        tracking = on;
-
-        if (findViewById(R.id.passiveButton) != null)
-            findViewById(R.id.passiveButton).setEnabled(!on);
-
-        if (findViewById(R.id.networkButton) != null)
-            findViewById(R.id.networkButton).setEnabled(!on);
-
-        if (findViewById(R.id.gpsButton) != null)
-            findViewById(R.id.gpsButton).setEnabled(!on);
-
-        findViewById(R.id.cachedButton).setEnabled(!on);
-
-        if (on)
-            lm.requestLocationUpdates(provider, 0, 0, this);
-        else
-            lm.removeUpdates(this);
-    }
-
     public void onTrackingToggled(View view) {
         boolean on = toggle.isChecked();
 
@@ -213,7 +212,6 @@ public class MainActivity extends Activity implements LocationListener {
         set++;
         add(getString(R.string.status_cached_format, provider, set, formatLocation(lm.getLastKnownLocation(provider))));
     }
-
 
     @Override
     public void onLocationChanged(Location location) {
