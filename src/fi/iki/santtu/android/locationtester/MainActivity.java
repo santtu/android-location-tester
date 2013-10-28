@@ -187,6 +187,11 @@ public class MainActivity extends Activity implements LocationListener {
             findViewById(R.id.gpsButton).setEnabled(!on);
 
         findViewById(R.id.cachedButton).setEnabled(!on);
+
+        if (on)
+            lm.requestLocationUpdates(provider, 0, 0, this);
+        else
+            lm.removeUpdates(this);
     }
 
     public void onTrackingToggled(View view) {
