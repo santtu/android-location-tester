@@ -46,14 +46,14 @@
     <!-- Text formatted for status display when showing a location update (tracking active), $1 is provider name, $2 is tracking set number and $3 is formatted location information -->
     <string name="status_location_format">%1$s-%2$d: Location: %3$s</string>
 
-    <!-- Text formatted for status display when provider status changes, $1 is provider name and $2 is the status number/code -->
-    <string name="status_changed_format">%1$s: Status: %2$d</string>
+    <!-- Text formatted for status display when provider status changes, $1 is provider name, $2 tracking set number and $3 is the status number/code -->
+    <string name="status_changed_format">%1$s-%2$d: Status: %3$d</string>
 
-    <!-- Text shown when a provider is enabled, $1 is location provider name -->
-    <string name="status_enabled_format">%1$s: Enabled</string>
+    <!-- Text shown when a provider is enabled, $1 is location provider name and $2 tracking set number -->
+    <string name="status_enabled_format">%1$s-%2$d: Enabled</string>
 
-    <!-- Text shown when a provider is disabled, $1 is location provider name -->
-    <string name="status_disabled_format">%1$s: Disabled</string>
+    <!-- Text shown when a provider is disabled, $1 is location provider name and $2 tracking set number -->
+    <string name="status_disabled_format">%1$s-%2$d: Disabled</string>
 
     <!-- Text shown when starting active tracking, $1 is provider name and $2 is tracking set number -->
     <string name="status_starting_format">%1$s-%2$d: Starting tracking</string>

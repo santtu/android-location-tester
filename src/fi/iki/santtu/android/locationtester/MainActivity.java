@@ -24,18 +24,22 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.RadioGroup;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
-import java.io.Serializable;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Vector;
+
+import static android.os.Environment.MEDIA_MOUNTED;
+import static android.os.Environment.getExternalStorageState;
 
 public class MainActivity extends Activity implements LocationListener {
     private static final String STATE_KEY = MainActivity.class.getCanonicalName() + ".state";
@@ -46,8 +50,9 @@ public class MainActivity extends Activity implements LocationListener {
     private ScrollView scroll;
     private ToggleButton toggle;
     private boolean tracking;
+    private FileWriter storageFile;
 
-    private Object formatLocation(Location l) {
+    private String formatLocation(Location l) {
         if (l == null)
             return "none";
 
@@ -76,7 +81,7 @@ public class MainActivity extends Activity implements LocationListener {
     protected void onPause() {
         Log.i("LocationTester", "onPause()");
         super.onPause();
-        lm.removeUpdates(this);
+        lm.removeUpdates(this); // don't use setTracking(false), it'd change state
     }
 
     @Override
@@ -84,14 +89,20 @@ public class MainActivity extends Activity implements LocationListener {
         Log.i("LocationTester", "onResume()");
         super.onResume();
 
-        if (tracking)
-            lm.requestLocationUpdates(provider, 0, 0, this);
+        setTracking(tracking);
     }
 
     @Override
     protected void onDestroy() {
         Log.i("LocationTester", "onDestroy()");
         super.onDestroy();
+        if (storageFile != null) {
+            try {
+                storageFile.close();
+            } catch (IOException e) {
+            }
+            storageFile = null;
+        }
     }
 
     @Override
@@ -118,6 +129,18 @@ public class MainActivity extends Activity implements LocationListener {
 
         if (!lm.isProviderEnabled(LocationManager.GPS_PROVIDER))
             ((RadioGroup) findViewById(R.id.providerGroup)).removeView(findViewById(R.id.gpsButton));
+
+        String state = getExternalStorageState();
+
+        if (MEDIA_MOUNTED.equals(state)) {
+            File file = new File(getExternalFilesDir(null), "location-data.csv");
+            try {
+                storageFile = new FileWriter(file);
+                Log.i("MainActivity", "opened file " + file + " as " + storageFile);
+            } catch (IOException e) {
+                Log.e("MainActivity", "Could not open file " + file + ", external storage state is " + state, e);
+            }
+        }
     }
 
     private boolean isTracking() {
@@ -208,28 +231,65 @@ public class MainActivity extends Activity implements LocationListener {
         }
     }
 
+    private void save(String format, Object... args) {
+        if (storageFile != null) {
+            String out = null;
+            try {
+                List<Object> updatedArgs = new Vector<Object>(4 + args.length);
+                updatedArgs.addAll(Arrays.asList(
+                        android.os.Process.myPid(),
+                        System.currentTimeMillis(),
+                        provider, set));
+                updatedArgs.addAll(Arrays.asList(args));
+                out = String.format("%d,%d,%s,%d," + format, updatedArgs.toArray());
+                storageFile.write(out);
+                storageFile.write("\n");
+
+                Log.d("MainActivity", "> " + out);
+            } catch (IOException e) {
+                Log.e("MainActivity", "error in writing to storage file: " + out, e);
+            }
+        }
+    }
+
+    private void saveLocation(String operation, Location l) {
+        save("%s,%f,%f,%f,%f,%f,%f",
+                operation,
+                l.getLatitude(), l.getLongitude(),
+                l.hasAltitude() ? l.getAltitude() : -1,
+                l.hasAccuracy() ? l.getAccuracy() : -1,
+                l.hasBearing() ? l.getBearing() : -1,
+                l.hasSpeed() ? l.getSpeed() : -1);
+    }
+
     public void onGetCachedLocationClick(View view) {
         set++;
-        add(getString(R.string.status_cached_format, provider, set, formatLocation(lm.getLastKnownLocation(provider))));
+        Location l = lm.getLastKnownLocation(provider);
+        add(getString(R.string.status_cached_format, provider, set, formatLocation(l)));
+        saveLocation("cached", l);
     }
 
     @Override
-    public void onLocationChanged(Location location) {
-        add(getString(R.string.status_location_format, provider, set, formatLocation(location)));
+    public void onLocationChanged(Location l) {
+        add(getString(R.string.status_location_format, provider, set, formatLocation(l)));
+        saveLocation("changed", l);
     }
 
     @Override
     public void onStatusChanged(String provider, int status, Bundle bundle) {
-        add(getString(R.string.status_changed_format, provider, status));
+        add(getString(R.string.status_changed_format, provider, set, status));
+        save("status,%s,%d", provider, status);
     }
 
     @Override
     public void onProviderEnabled(String provider) {
-        add(getString(R.string.status_enabled_format, provider));
+        add(getString(R.string.status_enabled_format, provider, set));
+        save("enabled,%s", provider);
     }
 
     @Override
     public void onProviderDisabled(String provider) {
-        add(getString(R.string.status_disabled_format, provider));
+        add(getString(R.string.status_disabled_format, provider, set));
+        save("disabled,%s", provider);
     }
 }
