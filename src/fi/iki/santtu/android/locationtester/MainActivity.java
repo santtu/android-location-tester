@@ -36,6 +36,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 import java.util.Vector;
 
 import static android.os.Environment.MEDIA_MOUNTED;
@@ -51,6 +52,7 @@ public class MainActivity extends Activity implements LocationListener {
     private ToggleButton toggle;
     private boolean tracking;
     private FileWriter storageFile;
+    private String setUuid;
 
     private String formatLocation(Location l) {
         if (l == null)
@@ -224,7 +226,7 @@ public class MainActivity extends Activity implements LocationListener {
         setTracking(on);
 
         if (on) {
-            set++;
+            newSet();
             add(getString(R.string.status_starting_format, provider, set));
         } else {
             add(getString(R.string.status_stopping_format, provider, set));
@@ -239,12 +241,12 @@ public class MainActivity extends Activity implements LocationListener {
                 updatedArgs.addAll(Arrays.asList(
                         android.os.Process.myPid(),
                         System.currentTimeMillis(),
-                        provider, set));
+                        provider, set, setUuid));
                 updatedArgs.addAll(Arrays.asList(args));
-                out = String.format("%d,%d,%s,%d," + format, updatedArgs.toArray());
+                out = String.format("%d,%d,%s,%d,%s," + format, updatedArgs.toArray());
                 storageFile.write(out);
                 storageFile.write("\n");
-
+                storageFile.flush();
                 Log.d("MainActivity", "> " + out);
             } catch (IOException e) {
                 Log.e("MainActivity", "error in writing to storage file: " + out, e);
@@ -263,7 +265,7 @@ public class MainActivity extends Activity implements LocationListener {
     }
 
     public void onGetCachedLocationClick(View view) {
-        set++;
+        newSet();
         Location l = lm.getLastKnownLocation(provider);
         add(getString(R.string.status_cached_format, provider, set, formatLocation(l)));
         saveLocation("cached", l);
@@ -291,5 +293,10 @@ public class MainActivity extends Activity implements LocationListener {
     public void onProviderDisabled(String provider) {
         add(getString(R.string.status_disabled_format, provider, set));
         save("disabled,%s", provider);
+    }
+
+    private void newSet() {
+        set++;
+        setUuid = UUID.randomUUID().toString();
     }
 }
